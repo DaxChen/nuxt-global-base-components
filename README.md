@@ -10,6 +10,8 @@
 
 [📖 **Release Notes**](./CHANGELOG.md)
 
+
+
 ## Features
 
 In the [Vue official style guide, there's a section about Base component names](https://vuejs.org/v2/style-guide/#Base-component-names-strongly-recommended), where base component should have names all begin with a specific prefix, such as `Base`, `App`, `V`, and mentioned a way for webpack users to register all these components globally.
@@ -17,6 +19,8 @@ In the [Vue official style guide, there's a section about Base component names](
 Also, in [@chrisvfritz](https://github.com/chrisvfritz)'s awesome talk [7 Secret Patterns Vue Consultants Don’t Want You to Know](https://youtu.be/7lpemgMhi0k?t=6m7s), he explained this technique in detail, too!
 
 So, this module does just that with nuxt!
+
+
 
 ## Installation
 
@@ -45,7 +49,10 @@ module.exports = {
 }
 ```
 
+
+
 ## Usage Examples
+
 
 ### With default inline options
 ```js
@@ -56,11 +63,12 @@ module.exports = {
     ['nuxt-global-base-components', {
       componentsPath: '~/components',
       recursive: false,
-      regex: /^Base[A-Z].+\.(vue|jsx?)$/
+      regex: /^(\.\/.+)*Base[A-Z].+\.(vue|jsx?)$/
     }]
   ]
 }
 ```
+
 
 ### With top level options which searches subdirectories recursively
 ```js
@@ -76,6 +84,7 @@ module.exports = {
 }
 ```
 
+
 ### With top level options to only includes `.vue` files and `App` prefix
 
 Only include `.vue` extensions, so `AppButton.js` or `AppButton.jsx` won't be included.
@@ -88,10 +97,12 @@ module.exports = {
     'nuxt-global-base-components'
   ],
   globalBaseComponents: {
-    regex: /^App[A-Z].+\.vue/
+    regex: /^(\.\/.+)*App[A-Z].+\.vue/
   }
 }
 ```
+
+
 
 ## Options
 
@@ -100,7 +111,7 @@ Currently, there are three options (and there default values):
 ```js
 const defaultOptions = {
   recursive: false,
-  regex: /^Base[A-Z].+\.(vue|jsx?)$/,
+  regex: /^(\.\/.+)*Base[A-Z].+\.(vue|jsx?)$/,
   componentsPath: '~/components'
 }
 ```
@@ -111,9 +122,10 @@ And these options are passed to wepack's [require.context](https://webpack.js.or
 const requireComponent = require.context(
   '~/components', // directory to search
   false, // whether subdirectories should be searched too
-  /^Base[A-Z].+\.(vue|jsx?)$/ // regular expression to match files against
+  /^(\.\/.+)*Base[A-Z].+\.(vue|jsx?)$/ // regular expression to match files against
 )
 ```
+
 
 ### `recursive`
 **type**: `Boolean`
@@ -126,22 +138,28 @@ and if `recursive: true`, all `~/components/BaseButton.vue`, `~/components/neste
 
 Turn this to true if you have BaseComponents in nested directories.
 
+
 ### `regex`
 **type**: `Regex`
-**default**: `/^Base[A-Z].+\.(vue|jsx?)$/`
+**default**: `/^(\.\/.+)*Base[A-Z].+\.(vue|jsx?)$/`
 
 A regular expression to match files against.
 
-The default regex `/^Base[A-Z].+\.(vue|jsx?)$/` matches all files starting with `Base` (followed by a capital letter, because PascalCase), and ends with `.vue`, `.js` or `.jsx` extension.
+The default regex `/^(\.\/.+)*Base[A-Z].+\.(vue|jsx?)$/` matches all files starting with `Base` (followed by a capital letter, because PascalCase), and ends with `.vue`, `.js` or `.jsx` extension.
 
-If you have a different prefix for global components, for example `App`, you can use `/^App[A-Z].+\.(vue|jsx?)$/`.
+Let's explain a little about this regex:
+1. Fisrt, `^` means starts with; `*` means zero or more, so the beginning part `^(\.\/.+)*` means *start with zero or more of the group (`./`), and `\.\/` is just `./` with escape.
+2. `Base[A-Z].+` is the literal Base, followed by a Capital Letter `[A-Z]`, and then followed by one or more (`*` means one or more) anything (`.` means anything).
+3. `\.(vue|jsx?)$`, `\.` is the escape of `.`, and `|` means or in the group, so either `.vue` or `.js` or `.jsx` (where `?` means zero or one time), and `$` means ends with.
+
+If you have a different prefix for global components, for example `App`, you can use `/^(\.\/.+)*App[A-Z].+\.(vue|jsx?)$/`.
 
 Here are some examples:
 
- - `/^Base[A-Z].+\.vue$/`: Matches all `.vue` files with `Base` prefix.
- - `/^App[A-Z].+\.(vue|js)$/`: Matches `.vue` or `.js` files with `App` prefix.
- - `/^V[A-Z].+\.(vue|jsx?)$/`: Matches `.vue`, `.js` or `.jsx` files with `V` prefix.
- - `/^Base[A-Z]/`: Matches any file extension with `Base` prefix.
+ - `/^(\.\/.+)*Base[A-Z].+\.vue$/`: Matches all `.vue` files with `Base` prefix.
+ - `/^(\.\/.+)*App[A-Z].+\.(vue|js)$/`: Matches `.vue` or `.js` files with `App` prefix.
+ - `/^(\.\/.+)*V[A-Z].+\.(vue|jsx?)$/`: Matches `.vue`, `.js` or `.jsx` files with `V` prefix.
+ - `/^(\.\/.+)*Base[A-Z]/`: Matches any file extension with `Base` prefix.
 
 
 ### `componentsPath`
@@ -150,11 +168,15 @@ Here are some examples:
 
 A directory for webpack to search. The default is `'~/components'`, which is probably the case for nuxt projects. Change it if you put your BaseComponents somewhere else.
 
+
+
 ## Development
 
 - Clone this repository
 - Install dependencies using `yarn install` or `npm install`
 - Start development server using `npm run dev`
+
+
 
 ## License
 
