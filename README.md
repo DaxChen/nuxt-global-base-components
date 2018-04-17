@@ -63,7 +63,7 @@ module.exports = {
     ['nuxt-global-base-components', {
       componentsPath: '~/components',
       recursive: false,
-      regex: /^(\.\/.+)*Base[A-Z].+\.(vue|jsx?)$/
+      regex: /^(\.\/.*)*Base[A-Z].+\.(vue|jsx?)$/
     }]
   ]
 }
@@ -97,7 +97,7 @@ module.exports = {
     'nuxt-global-base-components'
   ],
   globalBaseComponents: {
-    regex: /^(\.\/.+)*App[A-Z].+\.vue/
+    regex: /^(\.\/.*)*App[A-Z].+\.vue/
   }
 }
 ```
@@ -111,7 +111,7 @@ Currently, there are three options (and there default values):
 ```js
 const defaultOptions = {
   recursive: false,
-  regex: /^(\.\/.+)*Base[A-Z].+\.(vue|jsx?)$/,
+  regex: /^(\.\/.*)*Base[A-Z].+\.(vue|jsx?)$/,
   componentsPath: '~/components'
 }
 ```
@@ -122,7 +122,7 @@ And these options are passed to wepack's [require.context](https://webpack.js.or
 const requireComponent = require.context(
   '~/components', // directory to search
   false, // whether subdirectories should be searched too
-  /^(\.\/.+)*Base[A-Z].+\.(vue|jsx?)$/ // regular expression to match files against
+  /^(\.\/.*)*Base[A-Z].+\.(vue|jsx?)$/ // regular expression to match files against
 )
 ```
 
@@ -141,25 +141,25 @@ Turn this to true if you have BaseComponents in nested directories.
 
 ### `regex`
 **type**: `Regex`
-**default**: `/^(\.\/.+)*Base[A-Z].+\.(vue|jsx?)$/`
+**default**: `/^(\.\/.*)*Base[A-Z].+\.(vue|jsx?)$/`
 
 A regular expression to match files against.
 
-The default regex `/^(\.\/.+)*Base[A-Z].+\.(vue|jsx?)$/` matches all files starting with `Base` (followed by a capital letter, because PascalCase), and ends with `.vue`, `.js` or `.jsx` extension.
+The default regex `/^(\.\/.*)*Base[A-Z].+\.(vue|jsx?)$/` matches all files starting with `Base` (followed by a capital letter, because PascalCase), and ends with `.vue`, `.js` or `.jsx` extension.
 
 Let's explain a little about this regex:
-1. Fisrt, `^` means starts with; `*` means zero or more, so the beginning part `^(\.\/.+)*` means *start with zero or more of the group (`./`), and `\.\/` is just `./` with escape.
+1. Fisrt, `^` means starts with; `*` means zero or more; `.` means anything. So the beginning part `^(\.\/.*)*` means start with zero or more of the group (`./` plus anything), and `\.\/` is just `./` with escape. We do this because file names get from webpack looks something like `./BaseButton.vue`, `./nested/BaseButton.vue`, so we need take the `./` part into account.
 2. `Base[A-Z].+` is the literal Base, followed by a Capital Letter `[A-Z]`, and then followed by one or more (`*` means one or more) anything (`.` means anything).
 3. `\.(vue|jsx?)$`, `\.` is the escape of `.`, and `|` means or in the group, so either `.vue` or `.js` or `.jsx` (where `?` means zero or one time), and `$` means ends with.
 
-If you have a different prefix for global components, for example `App`, you can use `/^(\.\/.+)*App[A-Z].+\.(vue|jsx?)$/`.
+If you have a different prefix for global components, for example `App`, you can use `/^(\.\/.*)*App[A-Z].+\.(vue|jsx?)$/`.
 
 Here are some examples:
 
- - `/^(\.\/.+)*Base[A-Z].+\.vue$/`: Matches all `.vue` files with `Base` prefix.
- - `/^(\.\/.+)*App[A-Z].+\.(vue|js)$/`: Matches `.vue` or `.js` files with `App` prefix.
- - `/^(\.\/.+)*V[A-Z].+\.(vue|jsx?)$/`: Matches `.vue`, `.js` or `.jsx` files with `V` prefix.
- - `/^(\.\/.+)*Base[A-Z]/`: Matches any file extension with `Base` prefix.
+ - `/^(\.\/.*)*Base[A-Z].+\.vue$/`: Matches all `.vue` files with `Base` prefix.
+ - `/^(\.\/.*)*App[A-Z].+\.(vue|js)$/`: Matches `.vue` or `.js` files with `App` prefix.
+ - `/^(\.\/.*)*V[A-Z].+\.(vue|jsx?)$/`: Matches `.vue`, `.js` or `.jsx` files with `V` prefix.
+ - `/^(\.\/.*)*Base[A-Z]/`: Matches any file extension with `Base` prefix.
 
 
 ### `componentsPath`
