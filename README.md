@@ -16,7 +16,7 @@ In the [Vue official style guide, there's a section about Base component names](
 
 Also, in [@chrisvfritz](https://github.com/chrisvfritz)'s awesome talk [7 Secret Patterns Vue Consultants Don’t Want You to Know](https://youtu.be/7lpemgMhi0k?t=6m7s), he explained this technique in detail, too!
 
-So, this middleware does just that with nuxt!
+So, this module does just that with nuxt!
 
 ## Installation
 
