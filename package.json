@@ -1,6 +1,6 @@
 {
   "name": "nuxt-global-base-components",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Register all BaseComponents globally in the components directory.",
   "license": "MIT",
   "contributors": [
